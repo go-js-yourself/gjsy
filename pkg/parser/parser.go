@@ -1,9 +1,9 @@
 package parser
 
 import (
-	"mcs/mpic/gjsy/ast"
-	"mcs/mpic/gjsy/lexer"
-	"mcs/mpic/gjsy/token"
+	"github.com/go-js-youself/gjsy/pkg/ast"
+	"github.com/go-js-youself/gjsy/pkg/lexer"
+	"github.com/go-js-youself/gjsy/pkg/token"
 )
 
 type Parser struct {
