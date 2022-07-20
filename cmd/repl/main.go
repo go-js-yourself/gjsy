@@ -1,7 +1,11 @@
 package main
 
-import "fmt"
+import (
+	"os"
+
+	"github.com/go-js-yourself/gjsy/pkg/repl"
+)
 
 func main() {
-	fmt.Println("REPL")
+	repl.Start(os.Stdin, os.Stdout)
 }
