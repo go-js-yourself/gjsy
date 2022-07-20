@@ -1,9 +1,10 @@
 package parser
 
 import (
-	"mcs/mpic/gjsy/ast"
-	"mcs/mpic/gjsy/lexer"
 	"testing"
+
+	"github.com/go-js-youself/gjsy/pkg/ast"
+	"github.com/go-js-youself/gjsy/pkg/lexer"
 )
 
 func TestLetStatements(t *testing.T) {

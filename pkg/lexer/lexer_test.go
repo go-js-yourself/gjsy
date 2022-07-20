@@ -3,7 +3,7 @@ package lexer
 import (
 	"testing"
 
-	"mcs/mpic/gjsy/token"
+	"github.com/go-js-youself/gjsy/pkg/token"
 )
 
 func TestNextToken(t *testing.T) {
