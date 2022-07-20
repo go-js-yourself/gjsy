@@ -13,7 +13,10 @@ func TestNextToken(t *testing.T) {
 	let c = a + b;
 
 	function test() {
-		return a + b + c;
+		1 == 1;
+		1 != 2;
+		!(true && false);
+		return 1 * a - b / c;
 	}
 `
 
@@ -43,11 +46,28 @@ func TestNextToken(t *testing.T) {
 		{token.LPAREN, "("},
 		{token.RPAREN, ")"},
 		{token.LBRACE, "{"},
+		{token.INT, "1"},
+		{token.EQ, "=="},
+		{token.INT, "1"},
+		{token.SEMICOLON, ";"},
+		{token.INT, "1"},
+		{token.NEQ, "!="},
+		{token.INT, "2"},
+		{token.SEMICOLON, ";"},
+		{token.NOT, "!"},
+		{token.LPAREN, "("},
+		{token.TRUE, "true"},
+		{token.AND, "&&"},
+		{token.FALSE, "false"},
+		{token.RPAREN, ")"},
+		{token.SEMICOLON, ";"},
 		{token.RETURN, "return"},
+		{token.INT, "1"},
+		{token.TIMES, "*"},
 		{token.IDENT, "a"},
-		{token.PLUS, "+"},
+		{token.MINUS, "-"},
 		{token.IDENT, "b"},
-		{token.PLUS, "+"},
+		{token.DIV, "/"},
 		{token.IDENT, "c"},
 		{token.SEMICOLON, ";"},
 		{token.RBRACE, "}"},
