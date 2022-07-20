@@ -3,8 +3,8 @@ package parser
 import (
 	"testing"
 
-	"github.com/go-js-youself/gjsy/pkg/ast"
-	"github.com/go-js-youself/gjsy/pkg/lexer"
+	"github.com/go-js-yourself/gjsy/pkg/ast"
+	"github.com/go-js-yourself/gjsy/pkg/lexer"
 )
 
 func TestLetStatements(t *testing.T) {

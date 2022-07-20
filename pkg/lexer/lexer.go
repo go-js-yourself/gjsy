@@ -1,7 +1,7 @@
 package lexer
 
 import (
-	"github.com/go-js-youself/gjsy/pkg/token"
+	"github.com/go-js-yourself/gjsy/pkg/token"
 )
 
 type Lexer struct {
