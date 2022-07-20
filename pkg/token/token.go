@@ -49,6 +49,7 @@ const (
 	TRUE     = "true"
 	FALSE    = "false"
 	LET      = "let"
+	VAR      = "var"
 	FUNCTION = "function"
 	RETURN   = "return"
 )
@@ -57,6 +58,7 @@ var keywords = map[string]TokenType{
 	"true":     TRUE,
 	"false":    FALSE,
 	"function": FUNCTION,
+	"var":      VAR,
 	"let":      LET,
 	"return":   RETURN,
 }

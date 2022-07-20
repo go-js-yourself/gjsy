@@ -10,7 +10,7 @@ import (
 func TestLetStatements(t *testing.T) {
 	input := `
 	let x = 5;
-	let y = 10;
+	var y = 10;
 	let foobar = 83838383;
 `
 	l := lexer.New(input)
@@ -43,7 +43,7 @@ func TestLetStatements(t *testing.T) {
 }
 
 func testLetStatement(t *testing.T, s ast.Statement, name string) bool {
-	if s.TokenLiteral() != "let" {
+	if s.TokenLiteral() != "let" && s.TokenLiteral() != "var" {
 		t.Errorf("s.TokenLiteral not 'let'")
 		return false
 	}
