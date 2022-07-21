@@ -19,8 +19,11 @@ func (bs *ClosureStatement) TokenLiteral() string {
 
 func (bs *ClosureStatement) String() string {
 	var out bytes.Buffer
+	out.WriteString("{\n")
 	for _, s := range bs.Statements {
 		out.WriteString(s.String())
+		out.WriteString("\n")
 	}
+	out.WriteString("}\n")
 	return out.String()
 }
