@@ -178,6 +178,115 @@ func TestIntegerLiteralExpression(t *testing.T) {
 	}
 }
 
+func TestIfExpression(t *testing.T) {
+	input := `if (x < y) { x }`
+
+	l := lexer.New(input)
+	p := New(l)
+	program := p.ParseProgram()
+	checkParserErrors(t, p)
+
+	if len(program.Statements) != 1 {
+		t.Fatalf("program.Body does not contain %d statements. got=%d\n",
+			1, len(program.Statements))
+	}
+
+	stmt, ok := program.Statements[0].(*ast.ExpressionStatement)
+	if !ok {
+		t.Fatalf("program.Statements[0] is not ast.ExpressionStatement. got=%T",
+			program.Statements[0])
+	}
+
+	exp, ok := stmt.Expression.(*ast.IfExpression)
+	if !ok {
+		t.Fatalf("stmt.Expression is not ast.IfExpression. got=%T",
+			stmt.Expression)
+	}
+
+	if !testOperationExpression(t, exp.Condition, "x", "<", "y") {
+		return
+	}
+
+	if len(exp.Expression.Statements) != 1 {
+		t.Errorf("Expression is not one statement. got=%d\n",
+			len(exp.Expression.Statements))
+	}
+
+	expr, ok := exp.Expression.Statements[0].(*ast.ExpressionStatement)
+	if !ok {
+		t.Fatalf("Statements[0] is not ast.ExpressionStatement. got=%T",
+			exp.Expression.Statements[0])
+	}
+
+	if !testIdentifier(t, expr.Expression, "x") {
+		return
+	}
+
+	if exp.ElseExpression != nil {
+		t.Errorf("exp.ElseExpression.Statements was not nil. got=%+v", exp.ElseExpression)
+	}
+}
+
+func TestIfElseExpression(t *testing.T) {
+	input := `if (x < y) { x } else { y }`
+
+	l := lexer.New(input)
+	p := New(l)
+	program := p.ParseProgram()
+	checkParserErrors(t, p)
+
+	if len(program.Statements) != 1 {
+		t.Fatalf("program.Body does not contain %d statements. got=%d\n",
+			1, len(program.Statements))
+	}
+
+	stmt, ok := program.Statements[0].(*ast.ExpressionStatement)
+	if !ok {
+		t.Fatalf("program.Statements[0] is not ast.ExpressionStatement. got=%T",
+			program.Statements[0])
+	}
+
+	exp, ok := stmt.Expression.(*ast.IfExpression)
+	if !ok {
+		t.Fatalf("stmt.Expression is not ast.IfExpression. got=%T",
+			stmt.Expression)
+	}
+
+	if !testOperationExpression(t, exp.Condition, "x", "<", "y") {
+		return
+	}
+
+	if len(exp.Expression.Statements) != 1 {
+		t.Errorf("Expression is not one statement. got=%d\n",
+			len(exp.Expression.Statements))
+	}
+
+	expr, ok := exp.Expression.Statements[0].(*ast.ExpressionStatement)
+	if !ok {
+		t.Fatalf("Statements[0] is not ast.ExpressionStatement. got=%T",
+			exp.Expression.Statements[0])
+	}
+
+	if !testIdentifier(t, expr.Expression, "x") {
+		return
+	}
+
+	if len(exp.ElseExpression.Statements) != 1 {
+		t.Errorf("exp.ElseExpression.Statements does not contain one statement. got=%d\n",
+			len(exp.ElseExpression.Statements))
+	}
+
+	elseExpr, ok := exp.ElseExpression.Statements[0].(*ast.ExpressionStatement)
+	if !ok {
+		t.Fatalf("Statements[0] is not ast.ExpressionStatement. got=%T",
+			exp.ElseExpression.Statements[0])
+	}
+
+	if !testIdentifier(t, elseExpr.Expression, "y") {
+		return
+	}
+}
+
 func testLetStatement(t *testing.T, s ast.Statement, name string) bool {
 	if s.TokenLiteral() != "let" && s.TokenLiteral() != "var" {
 		t.Errorf("s.TokenLiteral not 'let' got: %s", s.TokenLiteral())
