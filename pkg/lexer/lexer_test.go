@@ -12,7 +12,7 @@ func TestNextToken(t *testing.T) {
 	var b = 20;
 	let c = a + b;
 
-	function test() {
+	function test(x,y) {
 		if (1 == 1) {
 			return;
 		} else {
@@ -47,6 +47,9 @@ func TestNextToken(t *testing.T) {
 		{token.FUNCTION, "function"},
 		{token.IDENT, "test"},
 		{token.LPAREN, "("},
+		{token.IDENT, "x"},
+		{token.COMMA, ","},
+		{token.IDENT, "y"},
 		{token.RPAREN, ")"},
 		{token.LBRACE, "{"},
 		{token.IF, "if"},
