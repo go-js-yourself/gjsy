@@ -62,6 +62,7 @@ func New(l *lexer.Lexer) *Parser {
 	p.registerExpr(token.NOT, p.parsePrefixExpr)
 	p.registerExpr(token.MINUS, p.parsePrefixExpr)
 	p.registerExpr(token.IF, p.parseIfExpression)
+	p.registerExpr(token.FUNCTION, p.parseFunctionExpression)
 
 	p.opExprs = make(map[token.TokenType]opExpr)
 	p.registerOpExpr(token.PLUS, p.parseOpExpr)
@@ -336,4 +337,59 @@ func (p *Parser) parseClosureStatement() *ast.ClosureStatement {
 	}
 
 	return block
+}
+
+func (p *Parser) parseFunctionExpression() ast.Expression {
+	fn := &ast.FunctionExpression{Token: p.curToken}
+
+	if p.peekTokenIs(token.LPAREN) {
+		p.nextToken()
+	} else {
+		if !p.expectPeek(token.IDENT) {
+			return nil
+		}
+
+		fn.Name = &ast.Identifier{Token: p.curToken, Value: p.curToken.Literal}
+		if !p.expectPeek(token.LPAREN) {
+			return nil
+		}
+	}
+
+	fn.Parameters = p.parseFunctionParameters()
+	if !p.expectPeek(token.LBRACE) {
+		return nil
+	}
+
+	fn.Expression = p.parseClosureStatement()
+	return fn
+}
+
+func (p *Parser) parseFunctionParameters() []*ast.Identifier {
+	params := make([]*ast.Identifier, 0)
+
+	if p.peekTokenIs(token.RPAREN) {
+		p.nextToken()
+		return params
+	}
+
+	p.nextToken()
+	params = append(params, &ast.Identifier{
+		Token: p.curToken,
+		Value: p.curToken.Literal,
+	})
+
+	for p.peekTokenIs(token.COMMA) {
+		p.nextToken()
+		p.nextToken()
+		params = append(params, &ast.Identifier{
+			Token: p.curToken,
+			Value: p.curToken.Literal,
+		})
+	}
+
+	if !p.expectPeek(token.RPAREN) {
+		return nil
+	}
+
+	return params
 }
