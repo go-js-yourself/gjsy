@@ -26,9 +26,9 @@ func (fe *FunctionExpression) String() string {
 		out += " " + fe.Name.String()
 	}
 
-	params := []string{}
-	for _, p := range fe.Parameters {
-		params = append(params, p.String())
+	params := make([]string, len(fe.Parameters))
+	for i, p := range fe.Parameters {
+		params[i] = p.String()
 	}
 
 	return out + "(" + strings.Join(params, ", ") + ")" + fe.Expression.String()
