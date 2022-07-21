@@ -9,8 +9,9 @@ test: docker-image
 	docker run -v $$PWD:/go/src/github.com/go-js-yourself/gjsy --rm gjsy go test ./...
 
 build: docker-image
+	mkdir -p build
 	docker run --name gjsy-build -v $$PWD:/go/src/github.com/go-js-yourself/gjsy -e CGO_ENABLED=0 gjsy \
 		go install ./...
-	docker cp gjsy-build:/go/bin/repl .
+	docker cp gjsy-build:/go/bin ./build
 	docker rm gjsy-build
 
