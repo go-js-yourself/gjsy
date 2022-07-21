@@ -57,6 +57,7 @@ const (
 	NULL     = "null"
 	UNDEF    = "undefined"
 	GO       = "go"
+	WHILE    = "while"
 )
 
 var keywords = map[string]TokenType{
@@ -71,6 +72,7 @@ var keywords = map[string]TokenType{
 	"null":      NULL,
 	"undefined": UNDEF,
 	"go":        GO,
+	"while":     WHILE,
 }
 
 func LookupIdent(ident string) TokenType {

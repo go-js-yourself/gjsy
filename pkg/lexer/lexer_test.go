@@ -18,8 +18,9 @@ func TestNextToken(t *testing.T) {
 		} else {
 			1 != 2;
 		}
-		!(true && false);
-		return 1 * a - b / c;
+		while (!(true && false)) {
+			return 1 * a - b / c;
+		}
 	}
 
 	go test(null,undefined);
@@ -71,13 +72,16 @@ func TestNextToken(t *testing.T) {
 		{token.INT, "2"},
 		{token.SEMICOLON, ";"},
 		{token.RBRACE, "}"},
+		{token.WHILE, "while"},
+		{token.LPAREN, "("},
 		{token.NOT, "!"},
 		{token.LPAREN, "("},
 		{token.TRUE, "true"},
 		{token.AND, "&&"},
 		{token.FALSE, "false"},
 		{token.RPAREN, ")"},
-		{token.SEMICOLON, ";"},
+		{token.RPAREN, ")"},
+		{token.LBRACE, "{"},
 		{token.RETURN, "return"},
 		{token.INT, "1"},
 		{token.TIMES, "*"},
@@ -87,6 +91,7 @@ func TestNextToken(t *testing.T) {
 		{token.DIV, "/"},
 		{token.IDENT, "c"},
 		{token.SEMICOLON, ";"},
+		{token.RBRACE, "}"},
 		{token.RBRACE, "}"},
 		{token.GO, "go"},
 		{token.IDENT, "test"},

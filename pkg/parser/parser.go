@@ -68,6 +68,7 @@ func New(l *lexer.Lexer) *Parser {
 	p.registerExpr(token.NOT, p.parsePrefixExpr)
 	p.registerExpr(token.MINUS, p.parsePrefixExpr)
 	p.registerExpr(token.IF, p.parseIfExpression)
+	p.registerExpr(token.WHILE, p.parseWhileExpression)
 	p.registerExpr(token.FUNCTION, p.parseFunctionExpression)
 	p.registerExpr(token.UNDEF, p.parseUndefined)
 	p.registerExpr(token.NULL, p.parseNull)
@@ -352,6 +353,26 @@ func (p *Parser) parseIfExpression() ast.Expression {
 		expression.ElseExpression = p.parseClosureStatement()
 	}
 
+	return expression
+}
+
+func (p *Parser) parseWhileExpression() ast.Expression {
+	expression := &ast.WhileExpression{Token: p.curToken}
+	if !p.expectPeek(token.LPAREN) {
+		return nil
+	}
+
+	p.nextToken()
+	expression.Condition = p.parseExpression(LOWEST)
+	if !p.expectPeek(token.RPAREN) {
+		return nil
+	}
+
+	if !p.expectPeek(token.LBRACE) {
+		return nil
+	}
+
+	expression.Expression = p.parseClosureStatement()
 	return expression
 }
 
