@@ -56,6 +56,7 @@ const (
 	ELSE     = "else"
 	NULL     = "null"
 	UNDEF    = "undefined"
+	GO       = "go"
 )
 
 var keywords = map[string]TokenType{
@@ -69,6 +70,7 @@ var keywords = map[string]TokenType{
 	"else":      ELSE,
 	"null":      NULL,
 	"undefined": UNDEF,
+	"go":        GO,
 }
 
 func LookupIdent(ident string) TokenType {

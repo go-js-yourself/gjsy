@@ -71,6 +71,7 @@ func New(l *lexer.Lexer) *Parser {
 	p.registerExpr(token.FUNCTION, p.parseFunctionExpression)
 	p.registerExpr(token.UNDEF, p.parseUndefined)
 	p.registerExpr(token.NULL, p.parseNull)
+	p.registerExpr(token.GO, p.parseGoExpression)
 
 	p.opExprs = make(map[token.TokenType]opExpr)
 	p.registerOpExpr(token.PLUS, p.parseOpExpr)
@@ -423,6 +424,26 @@ func (p *Parser) parseFunctionParameters() []*ast.Identifier {
 	}
 
 	return params
+}
+
+func (p *Parser) parseGoExpression() ast.Expression {
+	exp := &ast.GoFunctionApplication{Token: p.curToken}
+	p.nextToken()
+
+	var fa interface{} = p.parseExpression(LOWEST)
+	switch v := fa.(type) {
+	case *ast.FunctionApplication:
+		exp.FunctionApplication = v
+		return exp
+	default:
+		p.errors = append(
+			p.errors,
+			fmt.Sprintf("Expected function application, got %T", v),
+		)
+	}
+
+	return nil
+
 }
 
 func (p *Parser) parseApplicationExpression(function ast.Expression) ast.Expression {

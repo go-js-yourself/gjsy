@@ -21,6 +21,8 @@ func TestNextToken(t *testing.T) {
 		!(true && false);
 		return 1 * a - b / c;
 	}
+
+	go test(null,undefined);
 `
 
 	tests := []struct {
@@ -86,6 +88,14 @@ func TestNextToken(t *testing.T) {
 		{token.IDENT, "c"},
 		{token.SEMICOLON, ";"},
 		{token.RBRACE, "}"},
+		{token.GO, "go"},
+		{token.IDENT, "test"},
+		{token.LPAREN, "("},
+		{token.NULL, "null"},
+		{token.COMMA, ","},
+		{token.UNDEF, "undefined"},
+		{token.RPAREN, ")"},
+		{token.SEMICOLON, ";"},
 	}
 
 	l := New(input)
