@@ -15,8 +15,10 @@ func TestLetStatements(t *testing.T) {
 		expectedValue      interface{}
 	}{
 		{"let x = 5;", "x", 5},
-		{"let y = true;", "y", true},
+		{"var y = true;", "y", true},
 		{"let foo=bar;", "foo", "bar"},
+		{"var bar;", "bar", &ast.Undefined{}},
+		{"var bar = null;", "bar", nil},
 	}
 
 	for _, tt := range tests {
@@ -26,12 +28,18 @@ func TestLetStatements(t *testing.T) {
 		checkParserErrors(t, p)
 
 		if len(program.Statements) != 1 {
+			fmt.Println(program.Statements)
 			t.Fatalf("program.Statements does not contain 1 statements. got=%d",
 				len(program.Statements))
 		}
 
 		stmt := program.Statements[0]
 		if !testLetStatement(t, stmt, tt.expectedIdentifier) {
+			return
+		}
+
+		val := stmt.(*ast.LetStatement).Value
+		if !testLiteralExpression(t, val, tt.expectedValue) {
 			return
 		}
 	}
@@ -578,6 +586,10 @@ func testLiteralExpression(t *testing.T, exp ast.Expression, expected interface{
 		return testIdentifier(t, exp, v)
 	case bool:
 		return testBooleanLiteral(t, exp, v)
+	case nil:
+		return testNullLiteral(t, exp, v)
+	case *ast.Undefined:
+		return testUndefinedLiteral(t, exp, v)
 	}
 	t.Errorf("type of exp not handled. got=%T", exp)
 	return false
@@ -642,8 +654,25 @@ func testBooleanLiteral(t *testing.T, exp ast.Expression, value bool) bool {
 	}
 
 	if bo.TokenLiteral() != fmt.Sprintf("%t", value) {
-		t.Errorf("bo.TokenLiteral not %t. got=%s",
-			value, bo.TokenLiteral())
+		t.Errorf("bo.TokenLiteral not %t. got=%s", value, bo.TokenLiteral())
+		return false
+	}
+
+	return true
+}
+
+func testNullLiteral(t *testing.T, exp ast.Expression, _ interface{}) bool {
+	if _, ok := exp.(*ast.Null); !ok {
+		t.Errorf("exp not *ast.Null. got=%T", exp)
+		return false
+	}
+
+	return true
+}
+
+func testUndefinedLiteral(t *testing.T, exp ast.Expression, _ interface{}) bool {
+	if _, ok := exp.(*ast.Undefined); !ok {
+		t.Errorf("exp not *ast.Undefined. got=%T", exp)
 		return false
 	}
 

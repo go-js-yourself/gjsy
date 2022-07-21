@@ -142,11 +142,21 @@ func (p *Parser) parseLetStatement() ast.Statement {
 
 	stmt.Name = &ast.Identifier{Token: p.curToken, Value: p.curToken.Literal}
 
-	if !p.expectPeek(token.ASSIGN) {
-		return nil
+	if !p.peekTokenIs(token.ASSIGN) {
+		if !p.expectPeek(token.SEMICOLON) {
+			return nil
+		}
+		stmt.Value = &ast.Undefined{Token: token.Token{
+			Type:    token.UNDEF,
+			Literal: string("undefined"),
+		}}
+		return stmt
 	}
+	p.nextToken()
+	p.nextToken()
 
-	if !p.curTokenIs(token.SEMICOLON) {
+	stmt.Value = p.parseExpression(LOWEST)
+	if p.peekTokenIs(token.SEMICOLON) {
 		p.nextToken()
 	}
 
