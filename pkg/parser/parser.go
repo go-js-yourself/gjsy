@@ -20,6 +20,11 @@ const (
 	APP     // func(X)
 )
 
+var undefined = &ast.Undefined{Token: token.Token{
+	Type:    token.UNDEF,
+	Literal: string("undefined"),
+}}
+
 var precedences = map[token.TokenType]int{
 	token.EQ:     EQ,
 	token.NEQ:    EQ,
@@ -146,10 +151,7 @@ func (p *Parser) parseLetStatement() ast.Statement {
 		if !p.expectPeek(token.SEMICOLON) {
 			return nil
 		}
-		stmt.Value = &ast.Undefined{Token: token.Token{
-			Type:    token.UNDEF,
-			Literal: string("undefined"),
-		}}
+		stmt.Value = undefined
 		return stmt
 	}
 	p.nextToken()
@@ -168,7 +170,14 @@ func (p *Parser) parseReturnStatement() ast.Statement {
 
 	p.nextToken()
 
-	for !p.curTokenIs(token.SEMICOLON) {
+	for p.curTokenIs(token.SEMICOLON) {
+		stmt.ReturnValue = undefined
+		p.nextToken()
+		return stmt
+	}
+
+	stmt.ReturnValue = p.parseExpression(LOWEST)
+	if p.peekTokenIs(token.SEMICOLON) {
 		p.nextToken()
 	}
 
