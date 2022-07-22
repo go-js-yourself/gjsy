@@ -24,7 +24,10 @@ func Eval(node ast.Node) object.Object {
 	case *ast.PrefixExpression:
 		right := Eval(node.Right)
 		return evalPrefixExpression(node.Operator, right)
-	// case *ast.InfixExpression:
+	case *ast.OperationExpression:
+		left := Eval(node.Left)
+		right := Eval(node.Right)
+		return evalInfixExpression(node.Operator, left, right)
 	case *ast.Null:
 		return NULL
 	}
