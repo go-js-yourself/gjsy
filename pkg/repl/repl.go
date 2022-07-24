@@ -7,6 +7,7 @@ import (
 
 	"github.com/go-js-yourself/gjsy/pkg/evaluator"
 	"github.com/go-js-yourself/gjsy/pkg/lexer"
+	"github.com/go-js-yourself/gjsy/pkg/object"
 	"github.com/go-js-yourself/gjsy/pkg/parser"
 )
 
@@ -14,6 +15,7 @@ const PROMPT = "js> "
 
 func Start(in io.Reader, out io.Writer) {
 	scanner := bufio.NewScanner(in)
+	env := object.NewEnvironment()
 	io.WriteString(out, "Welcome to Go JS Yourself!\n")
 
 	for {
@@ -34,7 +36,7 @@ func Start(in io.Reader, out io.Writer) {
 			continue
 		}
 
-		evaluated := evaluator.Eval(program)
+		evaluated := evaluator.Eval(program, env)
 		if evaluated != nil {
 			io.WriteString(out, evaluated.Inspect())
 			io.WriteString(out, "\n")

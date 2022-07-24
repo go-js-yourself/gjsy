@@ -5,15 +5,15 @@ import (
 	"github.com/go-js-yourself/gjsy/pkg/object"
 )
 
-func evalIfExpression(ie *ast.IfExpression) object.Object {
-	condition := Eval(ie.Condition)
+func evalIfExpression(ie *ast.IfExpression, env *object.Environment) object.Object {
+	condition := Eval(ie.Condition, env)
 	if isError(condition) {
 		return condition
 	}
 	if isTruthy(condition) {
-		return Eval(ie.Expression)
+		return Eval(ie.Expression, env)
 	} else if ie.ElseExpression != nil {
-		return Eval(ie.ElseExpression)
+		return Eval(ie.ElseExpression, env)
 	} else {
 		return NULL
 	}

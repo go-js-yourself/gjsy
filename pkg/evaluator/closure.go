@@ -5,11 +5,11 @@ import (
 	"github.com/go-js-yourself/gjsy/pkg/object"
 )
 
-func evalClosureStatement(closure *ast.ClosureStatement) object.Object {
+func evalClosureStatement(closure *ast.ClosureStatement, env *object.Environment) object.Object {
 	var result object.Object
 
 	for _, statement := range closure.Statements {
-		result = Eval(statement)
+		result = Eval(statement, env)
 
 		if result != nil {
 			rt := result.Type()
