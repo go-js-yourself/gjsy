@@ -258,11 +258,11 @@ func (p *Parser) parseIdentifier() ast.Expression {
 }
 
 func (p *Parser) parseNull() ast.Expression {
-	return &ast.Null{p.curToken}
+	return &ast.Null{Token: p.curToken}
 }
 
 func (p *Parser) parseUndefined() ast.Expression {
-	return &ast.Undefined{p.curToken}
+	return &ast.Undefined{Token: p.curToken}
 }
 
 func (p *Parser) parseBoolean() ast.Expression {
