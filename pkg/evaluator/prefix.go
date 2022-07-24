@@ -25,6 +25,8 @@ func evalBangOperatorExpression(right object.Object) object.Object {
 		return TRUE
 	case NULL:
 		return TRUE
+	case UNDEFINED:
+		return TRUE
 	default:
 		return FALSE
 	}

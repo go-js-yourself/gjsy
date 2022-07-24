@@ -6,9 +6,10 @@ import (
 )
 
 var (
-	NULL  = &object.Null{}
-	TRUE  = &object.Boolean{Value: true}
-	FALSE = &object.Boolean{Value: false}
+	NULL      = &object.Null{}
+	UNDEFINED = &object.Undefined{}
+	TRUE      = &object.Boolean{Value: true}
+	FALSE     = &object.Boolean{Value: false}
 )
 
 func Eval(node ast.Node, env *object.Environment) object.Object {
@@ -73,6 +74,8 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 		return &object.ReturnValue{Value: val}
 	case *ast.Null:
 		return NULL
+	case *ast.Undefined:
+		return UNDEFINED
 	}
 
 	return nil
