@@ -49,6 +49,12 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 			return val
 		}
 		env.Set(node.Name.Value, val)
+	case *ast.FunctionExpression:
+		params := node.Parameters
+		body := node.Expression
+		return &object.Function{Parameters: params, Env: env, Body: body}
+	case *ast.FunctionApplication:
+		return evalFunction(node, env)
 	case *ast.ReturnStatement:
 		val := Eval(node.ReturnValue, env)
 		if isError(val) {
@@ -74,6 +80,23 @@ func evalProgram(program *ast.Program, env *object.Environment) object.Object {
 		case *object.Error:
 			return result
 		}
+	}
+
+	return result
+}
+
+func evalExpressions(
+	exps []ast.Expression,
+	env *object.Environment,
+) []object.Object {
+	var result []object.Object
+
+	for _, e := range exps {
+		evaluated := Eval(e, env)
+		if isError(evaluated) {
+			return []object.Object{evaluated}
+		}
+		result = append(result, evaluated)
 	}
 
 	return result
