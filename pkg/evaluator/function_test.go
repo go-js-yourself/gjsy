@@ -41,6 +41,7 @@ func TestFunctionApplication(t *testing.T) {
 		{"let add = function(x, y) { x + y; }; add(2, 3);", 5},
 		{"let add = function(x, y) { x + y; }; add(add(2,3), 5);", 10},
 		{"function(x) { x; }(5)", 5},
+		{"function foo(x) { x; }; foo(5)", 5},
 	}
 
 	for _, tt := range tests {

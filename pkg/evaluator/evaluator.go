@@ -52,7 +52,17 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 	case *ast.FunctionExpression:
 		params := node.Parameters
 		body := node.Expression
-		return &object.Function{Parameters: params, Env: env, Body: body}
+		name := node.Name
+		fn := &object.Function{
+			Parameters: params,
+			Env:        env,
+			Body:       body,
+			Name:       name,
+		}
+		if name != nil {
+			env.Set(node.Name.Value, fn)
+		}
+		return fn
 	case *ast.FunctionApplication:
 		return evalFunction(node, env)
 	case *ast.ReturnStatement:
