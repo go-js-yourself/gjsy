@@ -2,6 +2,10 @@ package evaluator
 
 import "github.com/go-js-yourself/gjsy/pkg/object"
 
+func unknownOperatorError(operator string, obj object.Object) *object.Error {
+	return newError("unknown operator: %s%s", operator, obj.Type())
+}
+
 func evalPrefixExpression(operator string, right object.Object) object.Object {
 	switch operator {
 	case "!":
@@ -9,7 +13,7 @@ func evalPrefixExpression(operator string, right object.Object) object.Object {
 	case "-":
 		return evalMinusPrefixOperatorExpression(right)
 	default:
-		return nil
+		return unknownOperatorError(operator, right)
 	}
 }
 
@@ -28,7 +32,7 @@ func evalBangOperatorExpression(right object.Object) object.Object {
 
 func evalMinusPrefixOperatorExpression(right object.Object) object.Object {
 	if right.Type() != object.INTEGER_OBJ {
-		return NULL
+		return unknownOperatorError("-", right)
 	}
 
 	value := right.(*object.Integer).Value

@@ -11,8 +11,11 @@ func evalClosureStatement(closure *ast.ClosureStatement) object.Object {
 	for _, statement := range closure.Statements {
 		result = Eval(statement)
 
-		if result != nil && result.Type() == object.RETURN_VALUE_OBJ {
-			return result
+		if result != nil {
+			rt := result.Type()
+			if rt == object.RETURN_VALUE_OBJ || rt == object.ERROR_OBJ {
+				return result
+			}
 		}
 	}
 
