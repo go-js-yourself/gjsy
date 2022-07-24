@@ -16,7 +16,7 @@ const PROMPT = "js> "
 func Start(in io.Reader, out io.Writer) {
 	scanner := bufio.NewScanner(in)
 	env := object.NewEnvironment()
-	io.WriteString(out, "Welcome to Go JS Yourself!\n")
+	io.WriteString(out, "Welcome to Go JS Yourself!\nUse Ctrl+D to exit REPL\n")
 
 	for {
 		fmt.Printf(PROMPT)
