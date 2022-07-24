@@ -45,5 +45,5 @@ func unwrapReturnValue(obj object.Object) object.Object {
 		return returnValue.Value
 	}
 
-	return obj
+	return &object.Undefined{}
 }

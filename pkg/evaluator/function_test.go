@@ -35,13 +35,13 @@ func TestFunctionApplication(t *testing.T) {
 		input    string
 		expected int64
 	}{
-		{"let identity = function(x) {x;}; identity(5);", 5},
-		{"let identity = function(x) { return x; }; identity(5);", 5},
-		{"let double = function(x) { x * 2; }; double(5);", 10},
-		{"let add = function(x, y) { x + y; }; add(2, 3);", 5},
-		{"let add = function(x, y) { x + y; }; add(add(2,3), 5);", 10},
-		{"function(x) { x; }(5)", 5},
-		{"function foo(x) { x; }; foo(5)", 5},
+		{"let identity = function(x) { return x;}; identity(5);", 5},
+		{"function identity(x) { return x; }; identity(5);", 5},
+		{"let double = function(x) { return x * 2; }; double(5);", 10},
+		{"let add = function(x, y) { return x + y; }; add(2, 3);", 5},
+		{"let add = function(x, y) { return x + y; }; add(add(2,3), 5);", 10},
+		{"function(x) { return x; }(5)", 5},
+		{"function foo(x) { return x; }; foo(5)", 5},
 	}
 
 	for _, tt := range tests {
@@ -50,12 +50,20 @@ func TestFunctionApplication(t *testing.T) {
 	}
 }
 
+func TestFunctionApplicatinWithoutReturnValue(t *testing.T) {
+	input := `function foo() { 1; }()`
+	evaluated := testEval(input)
+	if _, ok := evaluated.(*object.Undefined); !ok {
+		t.Fatalf("object is not Undefined. got=%T (%+v)", evaluated, evaluated)
+	}
+}
+
 func TestNestedClosures(t *testing.T) {
 	input := `
 	let newAdder = function(x) {
-		function(y) { return x + y };
+		return function(y) { return x + y };
 	};
-	
+
 	let addTwo = newAdder(2);
 	addTwo(2);`
 
