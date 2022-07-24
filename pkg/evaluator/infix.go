@@ -24,6 +24,30 @@ func evalIntPair(operator string, left object.Object, right object.Object) objec
 		return &object.Integer{Value: lval * rval}
 	case "/":
 		return &object.Integer{Value: lval / rval}
+	case "<":
+		if lval < rval {
+			return TRUE
+		} else {
+			return FALSE
+		}
+	case ">":
+		if lval > rval {
+			return TRUE
+		} else {
+			return FALSE
+		}
+	case "==":
+		if lval == rval {
+			return TRUE
+		} else {
+			return FALSE
+		}
+	case "!=":
+		if lval != rval {
+			return TRUE
+		} else {
+			return FALSE
+		}
 	default:
 		return NULL
 	}
