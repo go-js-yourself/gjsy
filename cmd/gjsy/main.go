@@ -16,8 +16,7 @@ Usage:
 
 Commands:
 	repl		Starts a REPL.
-	<file name>	Process a JavaScript file.
-`
+	<file name>	Process a JavaScript file.`
 
 func main() {
 	if len(os.Args) == 1 {
