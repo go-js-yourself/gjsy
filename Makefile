@@ -19,4 +19,4 @@ build: docker-image
 
 repl: docker-image
 	docker run --rm -v $$PWD:/go/src/github.com/go-js-yourself/gjsy -ti gjsy go \
-		run ./cmd/repl
+		run ./cmd/gjsy repl
