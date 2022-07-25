@@ -20,3 +20,11 @@ build: docker-image
 repl: docker-image
 	docker run --rm -v $$PWD:/go/src/github.com/go-js-yourself/gjsy -ti gjsy go \
 		run ./cmd/gjsy repl
+
+run:
+ifeq ($(FILE),)
+	@echo "FILE variable is required"
+else
+	docker run --rm -v $$PWD:/go/src/github.com/go-js-yourself/gjsy -ti gjsy go \
+		run ./cmd/gjsy $(FILE)
+endif
