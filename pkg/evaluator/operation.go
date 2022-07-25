@@ -1,6 +1,10 @@
 package evaluator
 
-import "github.com/go-js-yourself/gjsy/pkg/object"
+import (
+	"math"
+
+	"github.com/go-js-yourself/gjsy/pkg/object"
+)
 
 func evalOperationExpression(operator string, left, right object.Object) object.Object {
 	switch {
@@ -26,30 +30,38 @@ func evalIntPair(operator string, left *object.Integer, right *object.Integer) o
 		return &object.Integer{Value: lval * rval}
 	case "/":
 		return &object.Integer{Value: lval / rval}
+	case "%":
+		return &object.Integer{Value: int64(math.Mod(float64(lval), float64(rval)))}
+	case "<=":
+		if lval <= rval {
+			return TRUE
+		}
+		return FALSE
 	case "<":
 		if lval < rval {
 			return TRUE
-		} else {
-			return FALSE
 		}
+		return FALSE
+	case ">=":
+		if lval >= rval {
+			return TRUE
+		}
+		return FALSE
 	case ">":
 		if lval > rval {
 			return TRUE
-		} else {
-			return FALSE
 		}
+		return FALSE
 	case "==":
 		if lval == rval {
 			return TRUE
-		} else {
-			return FALSE
 		}
+		return FALSE
 	case "!=":
 		if lval != rval {
 			return TRUE
-		} else {
-			return FALSE
 		}
+		return FALSE
 	default:
 		return newError("unknown operator: %s %s %s", left.Type(), operator, right.Type())
 	}
@@ -60,15 +72,23 @@ func evalBoolPair(operator string, left *object.Boolean, right *object.Boolean) 
 	case "==":
 		if left.Value == right.Value {
 			return TRUE
-		} else {
-			return FALSE
 		}
+		return FALSE
 	case "!=":
 		if left.Value != right.Value {
 			return TRUE
-		} else {
-			return FALSE
 		}
+		return FALSE
+	case "&&":
+		if left.Value && right.Value {
+			return TRUE
+		}
+		return FALSE
+	case "||":
+		if left.Value || right.Value {
+			return TRUE
+		}
+		return FALSE
 	default:
 		return newError("unknown operator: %s %s %s", left.Type(), operator, right.Type())
 	}

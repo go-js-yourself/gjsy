@@ -32,15 +32,20 @@ func TestEvalIntegerComparison(t *testing.T) {
 		{"10 > 20", false},
 		{"10 < 1", false},
 		{"10 < 20", true},
-		// TODO: Add gte, lte to parsing
-		// {"10 <= 10", true},
-		// {"10 <= 11", true},
-		// {"10 <= 9", false},
-		// {"10 >= 10", true},
-		// {"10 >= 11", false},
-		// {"10 >= 9", true},
+		{"10 <= 10", true},
+		{"10 <= 11", true},
+		{"10 <= 9", false},
+		{"10 >= 10", true},
+		{"10 >= 11", false},
+		{"10 >= 9", true},
 		{"10 == 10", true},
 		{"10 == 11", false},
+		{"10 != 11", true},
+		{"10 != 10", false},
+		{"true && true", true},
+		{"false && true", false},
+		{"true || false", true},
+		{"false || false", false},
 	}
 
 	for _, tt := range tests {

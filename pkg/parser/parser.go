@@ -14,6 +14,8 @@ const (
 	LOWEST
 	EQ      // ==
 	LTGT    // > or <
+	OR      // ||
+	AND     // &&
 	SUM     // +
 	PRODUCT // *
 	PREFIX  // -X or !X
@@ -29,7 +31,11 @@ var precedences = map[token.TokenType]int{
 	token.EQ:     EQ,
 	token.NEQ:    EQ,
 	token.LT:     LTGT,
+	token.LTE:    LTGT,
 	token.GT:     LTGT,
+	token.GTE:    LTGT,
+	token.OR:     AND,
+	token.AND:    OR,
 	token.PLUS:   SUM,
 	token.MINUS:  SUM,
 	token.MOD:    PRODUCT,
