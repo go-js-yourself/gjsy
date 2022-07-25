@@ -14,7 +14,7 @@ func TestNextToken(t *testing.T) {
 
 	function test(x,y) {
 		if (1 == 1) {
-			return;
+			return "foo bar";
 		} else {
 			1 != 2;
 		}
@@ -23,7 +23,7 @@ func TestNextToken(t *testing.T) {
 		}
 	}
 
-	go test(null,undefined);
+	go test(null,undefined,'foo bar');
 `
 
 	tests := []struct {
@@ -63,6 +63,7 @@ func TestNextToken(t *testing.T) {
 		{token.RPAREN, ")"},
 		{token.LBRACE, "{"},
 		{token.RETURN, "return"},
+		{token.STRING, "foo bar"},
 		{token.SEMICOLON, ";"},
 		{token.RBRACE, "}"},
 		{token.ELSE, "else"},
@@ -99,6 +100,8 @@ func TestNextToken(t *testing.T) {
 		{token.NULL, "null"},
 		{token.COMMA, ","},
 		{token.UNDEF, "undefined"},
+		{token.COMMA, ","},
+		{token.STRING, "foo bar"},
 		{token.RPAREN, ")"},
 		{token.SEMICOLON, ";"},
 	}

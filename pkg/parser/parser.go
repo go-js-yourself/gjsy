@@ -73,6 +73,7 @@ func New(l *lexer.Lexer) *Parser {
 	p.registerExpr(token.UNDEF, p.parseUndefined)
 	p.registerExpr(token.NULL, p.parseNull)
 	p.registerExpr(token.GO, p.parseGoExpression)
+	p.registerExpr(token.STRING, p.parseStringLiteral)
 
 	p.opExprs = make(map[token.TokenType]opExpr)
 	p.registerOpExpr(token.PLUS, p.parseOpExpr)
@@ -495,4 +496,8 @@ func (p *Parser) parseCallArguments() []ast.Expression {
 	}
 
 	return args
+}
+
+func (p *Parser) parseStringLiteral() ast.Expression {
+	return &ast.StringLiteral{Token: p.curToken, Value: p.curToken.Literal}
 }

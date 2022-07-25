@@ -578,6 +578,7 @@ func TestFunctionApplicationExpressionParsing(t *testing.T) {
 	testOperationExpression(t, exp.Arguments[1], 2, "*", 3)
 	testOperationExpression(t, exp.Arguments[2], 4, "+", 5)
 }
+
 func TestGoFunctionApplicationExpressionParsing(t *testing.T) {
 	input := "go foo(1, 2 * 3, 4 + 5);"
 
@@ -614,6 +615,38 @@ func TestGoFunctionApplicationExpressionParsing(t *testing.T) {
 	testLiteralExpression(t, exp.Arguments[0], 1)
 	testOperationExpression(t, exp.Arguments[1], 2, "*", 3)
 	testOperationExpression(t, exp.Arguments[2], 4, "+", 5)
+}
+
+func TestStringLiteralExpression(t *testing.T) {
+	input := `"hello world";`
+	l := lexer.New(input)
+	p := New(l)
+	program := p.ParseProgram()
+	checkParserErrors(t, p)
+	stmt := program.Statements[0].(*ast.ExpressionStatement)
+	literal, ok := stmt.Expression.(*ast.StringLiteral)
+	if !ok {
+		t.Fatalf("exp not *ast.StringLiteral. got=%T", stmt.Expression)
+	}
+	if literal.Value != "hello world" {
+		t.Errorf("literal.Value not %q. got=%q", "hello world", literal.Value)
+	}
+}
+
+func TestStringLiteralExpressionSingleQuotes(t *testing.T) {
+	input := `'hello world';`
+	l := lexer.New(input)
+	p := New(l)
+	program := p.ParseProgram()
+	checkParserErrors(t, p)
+	stmt := program.Statements[0].(*ast.ExpressionStatement)
+	literal, ok := stmt.Expression.(*ast.StringLiteral)
+	if !ok {
+		t.Fatalf("exp not *ast.StringLiteral. got=%T", stmt.Expression)
+	}
+	if literal.Value != "hello world" {
+		t.Errorf("literal.Value not %q. got=%q", "hello world", literal.Value)
+	}
 }
 
 func testClosureExpression(t *testing.T, cs ast.Statement, vals []string) bool {
