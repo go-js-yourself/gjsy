@@ -44,6 +44,50 @@ func TestLetStatements(t *testing.T) {
 	}
 }
 
+func TestAssignExpression(t *testing.T) {
+	tests := []struct {
+		input              string
+		expectedIdentifier string
+		expectedValue      interface{}
+	}{
+		{"x = 5;", "x", 5},
+		{"y = true;", "y", true},
+		{"foo=bar;", "foo", "bar"},
+		{"bar = null;", "bar", nil},
+	}
+
+	for _, tt := range tests {
+		l := lexer.New(tt.input)
+		p := New(l)
+		program := p.ParseProgram()
+		checkParserErrors(t, p)
+
+		if len(program.Statements) != 1 {
+			t.Fatalf("program.Statements does not contain 1 statements. got=%d",
+				len(program.Statements))
+		}
+
+		stmt, ok := program.Statements[0].(*ast.ExpressionStatement)
+		if !ok {
+			t.Fatalf("program.Statements[0] is not ast.ExpressionStatement. got=%T",
+				program.Statements[0])
+		}
+
+		exp, ok := stmt.Expression.(*ast.AssignExpression)
+		if !ok {
+			t.Fatalf("exp is not ast.AssignExpression. got=%T(%s)", exp, exp)
+		}
+
+		if !testIdentifier(t, exp.Name, tt.expectedIdentifier) {
+			return
+		}
+
+		if !testLiteralExpression(t, exp.Value, tt.expectedValue) {
+			return
+		}
+	}
+}
+
 func TestBooleanExpression(t *testing.T) {
 	tests := []struct {
 		input           string

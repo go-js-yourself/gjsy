@@ -31,6 +31,7 @@ var undefined = &ast.Undefined{Token: token.Token{
 var precedences = map[token.TokenType]int{
 	token.EQ:     EQ,
 	token.NEQ:    EQ,
+	token.ASSIGN: EQ,
 	token.LT:     LTGT,
 	token.LTE:    LTGT,
 	token.GT:     LTGT,
@@ -97,6 +98,7 @@ func New(l *lexer.Lexer) *Parser {
 	p.registerOpExpr(token.GTE, p.parseOpExpr)
 	p.registerOpExpr(token.AND, p.parseOpExpr)
 	p.registerOpExpr(token.OR, p.parseOpExpr)
+	p.registerOpExpr(token.ASSIGN, p.parseAssignExpr)
 	p.registerOpExpr(token.DOT, p.parseDotExpr)
 	p.registerOpExpr(token.LPAREN, p.parseApplicationExpression)
 
@@ -148,6 +150,22 @@ func (p *Parser) parseStatement() ast.Statement {
 		return nil
 	}
 	return p.parseExpressionStatement()
+}
+
+func (p *Parser) parseAssignExpr(left ast.Expression) ast.Expression {
+	name, ok := left.(*ast.Identifier)
+	if !ok {
+		msg := fmt.Sprintf("invalid assignment left-hand side, got %T", left)
+		p.errors = append(p.errors, msg)
+		return nil
+	}
+
+	stmt := &ast.AssignExpression{Token: p.curToken, Name: name}
+
+	p.nextToken()
+	stmt.Value = p.parseExpression(LOWEST)
+
+	return stmt
 }
 
 func (p *Parser) parseLetStatement() ast.Statement {
