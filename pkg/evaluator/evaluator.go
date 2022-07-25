@@ -40,6 +40,8 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 			return right
 		}
 		return evalOperationExpression(node.Operator, left, right)
+	case *ast.DotExpression:
+		return evalDotExpression(node, env)
 	case *ast.IfExpression:
 		return evalIfExpression(node, env)
 	case *ast.Identifier:
@@ -115,4 +117,20 @@ func evalExpressions(
 	}
 
 	return result
+}
+
+func evalDotExpression(node *ast.DotExpression, env *object.Environment) object.Object {
+	left := Eval(node.Left, env).(*object.BuiltinObj)
+	if isError(left) {
+		return left
+	}
+	clEnv := object.NewEnclosedEnvironment(env)
+	for k, v := range left.Funcs {
+		clEnv.Set(k, v)
+	}
+	right := Eval(node.Right, clEnv)
+	if isError(right) {
+		return right
+	}
+	return right
 }

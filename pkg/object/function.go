@@ -14,7 +14,7 @@ type Function struct {
 	Name       *ast.Identifier
 }
 
-func (f *Function) Type() ObjectType {
+func (*Function) Type() ObjectType {
 	return FUNCTION_OBJ
 }
 

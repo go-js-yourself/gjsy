@@ -20,6 +20,7 @@ const (
 	PRODUCT // *
 	PREFIX  // -X or !X
 	APP     // func(X)
+	OBJ_APP // obj.func(X)
 )
 
 var undefined = &ast.Undefined{Token: token.Token{
@@ -41,6 +42,7 @@ var precedences = map[token.TokenType]int{
 	token.MOD:    PRODUCT,
 	token.DIV:    PRODUCT,
 	token.TIMES:  PRODUCT,
+	token.DOT:    OBJ_APP,
 	token.LPAREN: APP,
 }
 
@@ -95,6 +97,7 @@ func New(l *lexer.Lexer) *Parser {
 	p.registerOpExpr(token.GTE, p.parseOpExpr)
 	p.registerOpExpr(token.AND, p.parseOpExpr)
 	p.registerOpExpr(token.OR, p.parseOpExpr)
+	p.registerOpExpr(token.DOT, p.parseDotExpr)
 	p.registerOpExpr(token.LPAREN, p.parseApplicationExpression)
 
 	p.nextToken()
@@ -472,6 +475,19 @@ func (p *Parser) parseGoExpression() ast.Expression {
 
 	return nil
 
+}
+
+func (p *Parser) parseDotExpr(left ast.Expression) ast.Expression {
+	e := &ast.DotExpression{
+		Token: p.curToken,
+		Left:  left,
+	}
+
+	precedence := p.curPrecedence()
+	p.nextToken()
+	e.Right = p.parseExpression(precedence)
+
+	return e
 }
 
 func (p *Parser) parseApplicationExpression(function ast.Expression) ast.Expression {

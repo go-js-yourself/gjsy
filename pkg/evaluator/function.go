@@ -10,24 +10,26 @@ func evalFunction(node *ast.FunctionApplication, env *object.Environment) object
 	if isError(target) {
 		return target
 	}
-	function, ok := target.(*object.Function)
-
-	if !ok {
-		return newError("not a function: %s", target.Type())
-	}
 
 	args := evalExpressions(node.Arguments, env)
 	if (len(args) == 1) && isError(args[0]) {
 		return args[0]
 	}
 
-	return applyFunction(function, args)
+	return applyFunction(target, args)
 }
 
-func applyFunction(fn *object.Function, args []object.Object) object.Object {
-	env := extendFunctionEnv(fn, args)
-	evaluated := Eval(fn.Body, env)
-	return unwrapReturnValue(evaluated)
+func applyFunction(fn object.Object, args []object.Object) object.Object {
+	switch fn := fn.(type) {
+	case *object.Function:
+		env := extendFunctionEnv(fn, args)
+		evaluated := Eval(fn.Body, env)
+		return unwrapReturnValue(evaluated)
+	case *object.BuiltinFunc:
+		return fn.Func(args...)
+	default:
+		return newError("not a function: %s", fn.Type())
+	}
 }
 
 func extendFunctionEnv(fn *object.Function, args []object.Object) *object.Environment {

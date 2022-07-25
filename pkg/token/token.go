@@ -17,6 +17,7 @@ const (
 
 	// Operators
 	ASSIGN = "="
+	DOT    = "."
 
 	// Binary Operators
 	PLUS  = "+"

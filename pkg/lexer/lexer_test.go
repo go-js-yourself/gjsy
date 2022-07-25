@@ -23,6 +23,7 @@ func TestNextToken(t *testing.T) {
 		}
 	}
 
+	console.log("test");
 	go test(null,undefined,'foo bar');
 `
 
@@ -94,6 +95,13 @@ func TestNextToken(t *testing.T) {
 		{token.SEMICOLON, ";"},
 		{token.RBRACE, "}"},
 		{token.RBRACE, "}"},
+		{token.IDENT, "console"},
+		{token.DOT, "."},
+		{token.IDENT, "log"},
+		{token.LPAREN, "("},
+		{token.STRING, "test"},
+		{token.RPAREN, ")"},
+		{token.SEMICOLON, ";"},
 		{token.GO, "go"},
 		{token.IDENT, "test"},
 		{token.LPAREN, "("},
