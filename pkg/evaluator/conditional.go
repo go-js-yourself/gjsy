@@ -27,6 +27,8 @@ func isTruthy(obj object.Object) bool {
 		return true
 	case FALSE:
 		return false
+	case UNDEFINED:
+		return false
 	default:
 		return true
 	}
