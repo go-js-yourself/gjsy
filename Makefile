@@ -1,4 +1,4 @@
-.PHONY: test build docker-image repl
+.PHONY: test build docker-image repl run
 
 default: test build
 
