@@ -76,6 +76,8 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 		return fn
 	case *ast.FunctionApplication:
 		return evalFunction(node, env)
+	case *ast.GoFunctionApplication:
+		return evalGoFunction(node, env)
 	case *ast.ReturnStatement:
 		val := Eval(node.ReturnValue, env)
 		if isError(val) {

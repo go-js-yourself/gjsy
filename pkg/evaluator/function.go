@@ -5,6 +5,34 @@ import (
 	"github.com/go-js-yourself/gjsy/pkg/object"
 )
 
+func evalGoFunction(node *ast.GoFunctionApplication, env *object.Environment) object.Object {
+	target := Eval(node.Function, env)
+	if isError(target) {
+		return target
+	}
+
+	args := evalExpressions(node.Arguments, env)
+	if (len(args) == 1) && isError(args[0]) {
+		return args[0]
+	}
+
+	return applyGoFunction(target, args)
+}
+
+func applyGoFunction(fn object.Object, args []object.Object) object.Object {
+	switch fn := fn.(type) {
+	case *object.Function:
+		env := extendFunctionEnv(fn, args)
+		go Eval(fn.Body, env)
+		return UNDEFINED
+	case *object.BuiltinFunc:
+		go fn.Func(args...)
+		return UNDEFINED
+	default:
+		return newError("not a function: %s", fn.Type())
+	}
+}
+
 func evalFunction(node *ast.FunctionApplication, env *object.Environment) object.Object {
 	target := Eval(node.Function, env)
 	if isError(target) {
