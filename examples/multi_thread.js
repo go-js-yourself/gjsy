@@ -4,21 +4,16 @@ var foo = function(x) {
     console.log("Thread", x, "iter", i);
     i = i - 1;
   }
-}
-
-function dumbest_sleep() {
-  console.log("Sleeping on main thread")
-  t = 1000000
-  while (t > 0) {
-    t = t - 1
-  }
-  console.log("Done")
+  wg.done();
 }
 
 var t = 5;
+wg.add(t);
 while (t > 0) {
   go foo(t);
   t = t - 1;
 }
 
-dumbest_sleep()
+console.log("Sleeping on main thread")
+wg.wait();
+console.log("Done")
