@@ -55,6 +55,64 @@ go run cmd/gjsy examples/hello_world.js
 
 ## Writeup
 
+### Introduction
+
+The goal of this project is to run a JavaScript interpreter in the Go
+programming language. However, why would we want to do this in the first place?
+JavaScript is an excellent language with much adoption in the front and back-end
+of web development. One of the root principles of the language is the
+event-based approach to solving concurrency and parallelism in run-time
+execution. However, another approach would be to use multi-threading. Because of
+its nature, JavaScript lacks multi-thread capabilities. So, in this project, we
+will add a new directive to JavaScript, akin to Go's "goroutine" `go` directive.
+We will implement it and allow us to fork threads in our interpreter, leveraging
+the thread management to Go.
+
+With this goal in mind, we decided to delimiter the number of instructions the
+interpreter will support. Doing a full implementation for JavaScript would blow
+the intentions of this exercise and probably would be impossible with limited
+time constrain. We have support for the following:
+
+* Literals:
+  * Integer
+  * Boolean
+  * String
+  * Null
+  * Undefined
+* Operations:
+  * Prefix (`-` and `!`)
+  * Binary (`+`, `-`, `/`, `*`, `%`)
+  * Comparison (`&&`, `||`, `>`, `>=`, `<`, `<=`, `==`, `!=`)
+* Statements:
+  * New variable definition
+    * Support for both `let` and `var` syntaxes (`var name = "value"`), also
+      supporting uninitialized variables (`let name;` which have an `undefined`
+      value)
+  * Return
+    * With the support of returning values, and without a value, it will return
+      an `undefined`
+  * Closures
+* Expressions:
+  * Function
+    * With support for named (`function name() {}`), and anonymous functions
+      (`function() {}`)
+  * Function application (`function() {...}()`)
+  * If/Else
+  * While loops
+  * Variable reassignment (`name = "new value"`)
+  * Dot (`a.b`)
+    * Even though we have support for the dot expression, we have a minimal
+      object system, which is used just for built-in exposed functions, namely
+      `console.log`, and a minimal barrier for the threads by using Go's
+      `sync.WaitGroup`, exposing a single instance of a wait group and providing
+      support for `wg.add(<integer>)`, `wg.done()` and `wg.wait()`
+  * Go function application
+    * This will start a new go routine (`go function() {...}()`)
+
+As we preferred to emphasize the project's original goal (to bring
+multi-threading to JavaScript), we decided not to implement some basic
+operations like string concatenation and grouped expressions.
+
 ### Parsing and Tokenization
 
 TODO
@@ -92,6 +150,8 @@ can be run by using the following command:
 ```shell
 make run FILE=examples/multi_thread.js
 ```
+
+### Conclusion
 
 ## Credits
 
