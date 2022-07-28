@@ -12,18 +12,23 @@ var (
 	FALSE     = &object.Boolean{Value: false}
 )
 
+// Recursively evaluate a given program
 func Eval(node ast.Node, env *object.Environment) object.Object {
 	switch node := node.(type) {
+	// statements
 	case *ast.Program:
 		return evalProgram(node, env)
 	case *ast.ExpressionStatement:
 		return Eval(node.Expression, env)
 	case *ast.ClosureStatement:
 		return evalClosureStatement(node, env)
-	case *ast.IntegerLiteral:
-		return &object.Integer{Value: node.Value}
-	case *ast.Boolean:
-		return nativeBoolToBooleanObject(node.Value)
+	case *ast.LetStatement:
+		val := Eval(node.Value, env)
+		if isError(val) {
+			return val
+		}
+		env.Set(node.Name.Value, val)
+	// expressions
 	case *ast.PrefixExpression:
 		right := Eval(node.Right, env)
 		if isError(right) {
@@ -54,12 +59,6 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 			return val
 		}
 		env.Set(node.Name.Value, val)
-	case *ast.LetStatement:
-		val := Eval(node.Value, env)
-		if isError(val) {
-			return val
-		}
-		env.Set(node.Name.Value, val)
 	case *ast.FunctionExpression:
 		params := node.Parameters
 		body := node.Expression
@@ -84,6 +83,11 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 			return val
 		}
 		return &object.ReturnValue{Value: val}
+	// literals
+	case *ast.IntegerLiteral:
+		return &object.Integer{Value: node.Value}
+	case *ast.Boolean:
+		return nativeBoolToBooleanObject(node.Value)
 	case *ast.Null:
 		return NULL
 	case *ast.Undefined:
@@ -95,6 +99,7 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 	return nil
 }
 
+// Evaluate the statements in the program
 func evalProgram(program *ast.Program, env *object.Environment) object.Object {
 	var result object.Object
 
