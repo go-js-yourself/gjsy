@@ -89,7 +89,9 @@ be waited on by using the built in `wg` object
 of this in [multi_thread.js](./examples/multi_thread.js) which
 can be run by using the following command:
 
-```FILE=examples/multi_thread.js make run```
+```shell
+FILE=examples/multi_thread.js make run
+```
 
 ## Credits
 
