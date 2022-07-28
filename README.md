@@ -53,6 +53,33 @@ make run FILE=examples/hello_world.js
 go run cmd/gjsy examples/hello_world.js
 ```
 
+## Writeup
+
+### Parsing and Tokenization
+
+TODO
+
+### Environment
+
+The environment represents the evaluation context for any given expression.
+It is defined in [engironment.go](./pkg/object/environment.go) and allows
+the persistance of state during the lifetime of the program.
+
+### Evaluation
+
+The [evaluator](./pkg/evaluator/evaluator.go) is responsible for the execution
+of the program. It does this by recursively evaluating the program, its
+statements, and expressions. In the above file, there is a single switch
+statement which selects on the token type to evaluate. Further evaluation
+is conducted in subordonate files. For example the
+[identifier.go](./pkg/evaluator/identifier.go) file evaluates an identifier
+given the environment.
+
 ## Credits
 
 Miles Possing, Ivan Valdes Castillo
+
+## References
+
+This effort was heavily influenced by the book
+Thorsten Ball's book "Writing an Interpreter in Go"
