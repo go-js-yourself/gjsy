@@ -1,62 +1,5 @@
 # gjsy (Go JS Yourself!)
 
-A JS interpreter written in GO. Now with multi-thread support!
-
-## Pre-requisites
-
-This project uses Go 1.18, but the `Makefile` commands will run on Docker to
-help with the project set up, prerequisites, etc. So, the only two
-pre-requisites are:
-
-* make
-* [Docker](https://docs.docker.com/get-docker/)
-
-## Testing
-
-If using the provided `Makefile`, run:
-
-```
-make test
-# or with Go
-go test ./...
-```
-
-## Building
-
-After building, a single binary `gjsy` can be found in the `build/bin`
-directory, if running with go, it is usually installed in `$GOPATH/bin`
-
-```
-make build
-# or
-go install ./...
-```
-
-## REPL
-
-This project includes a REPL, you can run it with:
-
-```
-make repl
-# or
-go run cmd/gjsy repl
-```
-
-## File interpreter
-
-There are several provided examples in the `examples` directory, to interpret
-a single file, run
-
-```
-make run FILE=examples/hello_world.js
-# or
-go run cmd/gjsy examples/hello_world.js
-```
-
-## Writeup
-
-### Introduction
-
 The goal of this project is to run a JavaScript interpreter in the Go
 programming language. However, why would we want to do this in the first place?
 JavaScript is an excellent language with much adoption in the front and back-end
@@ -113,17 +56,17 @@ As we preferred to emphasize the project's original goal (to bring
 multi-threading to JavaScript), we decided not to implement some basic
 operations like string concatenation and grouped expressions.
 
-### Parsing and Tokenization
+## Parsing and Tokenization
 
 TODO
 
-### Environment
+## Environment
 
 The environment represents the evaluation context for any given expression.
 It is defined in [engironment.go](./pkg/object/environment.go) and allows
 the persistance of state during the lifetime of the program.
 
-### Evaluation
+## Evaluation
 
 The [evaluator](./pkg/evaluator/evaluator.go) is responsible for the execution
 of the program. It does this by recursively evaluating the program, its
@@ -133,7 +76,7 @@ is conducted in subordonate files. For example the
 [identifier.go](./pkg/evaluator/identifier.go) file evaluates an identifier
 given the environment.
 
-### Parallelism and Go
+## Parallelism and Go
 
 Perhaps the only unique facet of this project is the application of
 go routines to evaluate function expressions in a
@@ -150,8 +93,60 @@ can be run by using the following command:
 ```shell
 make run FILE=examples/multi_thread.js
 ```
+## Working with the Source Code
 
-### Conclusion
+### Pre-requisites
+
+This project uses Go 1.18, but the `Makefile` commands will run on Docker to
+help with the project set up, prerequisites, etc. So, the only two
+pre-requisites are:
+
+* make
+* [Docker](https://docs.docker.com/get-docker/)
+
+### Testing
+
+If using the provided `Makefile`, run:
+
+```
+make test
+# or with Go
+go test ./...
+```
+
+### Building
+
+After building, a single binary `gjsy` can be found in the `build/bin`
+directory, if running with go, it is usually installed in `$GOPATH/bin`
+
+```
+make build
+# or
+go install ./...
+```
+
+### REPL
+
+This project includes a REPL, you can run it with:
+
+```
+make repl
+# or
+go run cmd/gjsy repl
+```
+
+### File interpreter
+
+There are several provided examples in the `examples` directory, to interpret
+a single file, run
+
+```
+make run FILE=examples/hello_world.js
+# or
+go run cmd/gjsy examples/hello_world.js
+```
+
+## Conclusion
 
 ## Credits
 
@@ -159,5 +154,5 @@ Miles Possing, Ivan Valdes Castillo
 
 ## References
 
-This effort was heavily influenced by the book
-Thorsten Ball's book "Writing an Interpreter in Go"
+This effort was heavily influenced by Thorsten Ball's book "Writing an
+Interpreter in Go"
