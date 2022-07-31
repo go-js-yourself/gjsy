@@ -1,30 +1,42 @@
-.PHONY: test build docker-image repl run
+.PHONY: test build docker-image repl run examples
 
 default: test build
 
 docker-image:
-	DOCKER_BUILDKIT=1 docker build -t gjsy .
+	@DOCKER_BUILDKIT=1 docker build -t gjsy .
 
 test: docker-image
 	docker run -v $$PWD:/go/src/github.com/go-js-yourself/gjsy --rm gjsy go test \
-		./...
+	  ./...
 
-build: docker-image
+build/bin/gjsy: docker-image
 	mkdir -p build
-	docker run --name gjsy-build -v $$PWD:/go/src/github.com/go-js-yourself/gjsy \
-		-e CGO_ENABLED=0 gjsy \
-		go install ./...
-	docker cp gjsy-build:/go/bin ./build
-	docker rm gjsy-build
+	docker run --rm \
+	           -v $$PWD:/go/src/github.com/go-js-yourself/gjsy \
+	           -v $$PWD/build:/go/bin \
+	           -e CGO_ENABLED=0 \
+	       gjsy go install ./...
 
-repl: docker-image
-	docker run --rm -v $$PWD:/go/src/github.com/go-js-yourself/gjsy -ti gjsy go \
-		run ./cmd/gjsy repl
+build: build/bin/gjsy
 
-run:
+repl: build/bin/gjsy
+	./build/bin/gjsy repl
+
+run: build/bin/gjsy
 ifeq ($(FILE),)
 	@echo "FILE variable is required"
 else
-	docker run --rm -v $$PWD:/go/src/github.com/go-js-yourself/gjsy -ti gjsy go \
-		run ./cmd/gjsy $(FILE)
+	./build/bin/gjsy $(FILE)
 endif
+
+examples: build/bin/gjsy
+	@for file in $(wildcard examples/*.js); do \
+	  echo ====================================================================; \
+	  echo File $$file ; \
+	  echo ; \
+	  cat $$file ; \
+	  echo --------------------------------------------------------------------; \
+	  echo Execution ; \
+	  ./build/bin/gjsy $$file ; \
+	  echo ; \
+	done
