@@ -58,13 +58,45 @@ operations like string concatenation and grouped expressions.
 
 ## Lexing and Tokenization
 
-We decided to write our interpreter from scratch. So, we started with the lexical analysis component, which reads the source code from the REPL or the file parser, then goes through the tokenization, which the parser uses later to generate the Abstract Syntax Tree.
+We decided to write our interpreter from scratch. So, we started with the
+lexical analysis component, which reads the source code from the REPL or the
+file parser, then goes through the tokenization, which the parser uses later to
+generate the Abstract Syntax Tree.
 
-We defined a [package](./pkg/token/token.go) with the token constants with the symbols we will support from JavaScript, from defining the end of file (EOF), identifiers, integers, and strings. Operations, binary, logical, and comparison. Delimiters, like the comma, semicolon, parentheses, and braces. And our supported keywords including boolean, null, and undefined literals, variable assignment through let and var, function declarations, return, if, and while statements, and the go operand. The Token structure holds the actual literal token as a string, and the type, which is the constant described before.
+We defined a [package](./pkg/token/token.go) with the token constants with the
+symbols we will support from JavaScript, from defining the end of file (EOF),
+identifiers, integers, and strings. Operations, binary, logical, and comparison.
+Delimiters, like the comma, semicolon, parentheses, and braces. And our
+supported keywords including boolean, null, and undefined literals, variable
+assignment through let and var, function declarations, return, if, and while
+statements, and the go operand. The Token structure holds the actual literal
+token as a string, and the type, which is the constant described before.
 
-The lexer component reads character by character, holding the current and a lookahead positions, along with the existing character of the byte type being analyzed. Given that JavaScript is not dependent on white spacing or tabbing, as other languages are, we discard these characters, including line breaks.
+The [lexer](./pkg/lexer/lexer.go) component reads character by character,
+holding the current and a lookahead positions, along with the existing character
+of the byte type being analyzed. Given that JavaScript is not dependent on white
+spacing or tabbing, as other languages are, we discard these characters,
+including line breaks.
 
-The parser consumes the lexer, exposing a public method to get the next token. If it finds that the current character is a simple token (e.g., `+`, `-`, `*`, `!`, `=`, etc.), it will immediately return the given token. However, if the token may be composed of a second character (e.g., `!=`, `==`, `>=`, etc.), then it looks ahead to the next character to decide if it should return a single character or the composition (i.e., `!`, or `!=`). We also have pairs that need to have a second character, like the and, and or logical operations (`&&`, `||`); these will only return the token if both characters are contiguous. If the lexer finds a number, it will treat is an integer literal and will read until the next character is other than a digit. We also have support for string literals with either single or double quotes, and if the lexer finds one of these characters, it will read until it finds a matching quote ahead. Finally, if the character is a letter, it will read the bytes until the next white space. First, it will check the keyword map (Go's maps are a key-value store, called Hash Maps, Hash Tables, Dictionaries in other languages). If it finds it, it will return the token for that keyword; else, it will treat it as an identifier (i.e., a variable, function name, etc.). The lexer will stop once it finds an EOF. And finally, if it doesn't match the previous rules, it will return an illegal token.
+The parser consumes the lexer, exposing a public method to get the next token.
+If it finds that the current character is a simple token (e.g., `+`, `-`, `*`,
+`!`, `=`, etc.), it will immediately return the given token. However, if the
+token may be composed of a second character (e.g., `!=`, `==`, `>=`, etc.), then
+it looks ahead to the next character to decide if it should return a single
+character or the composition (i.e., `!`, or `!=`). We also have pairs that need
+to have a second character, like the and, and or logical operations (`&&`,
+`||`); these will only return the token if both characters are contiguous. If
+the lexer finds a number, it will treat is an integer literal and will read
+until the next character is other than a digit. We also have support for string
+literals with either single or double quotes, and if the lexer finds one of
+these characters, it will read until it finds a matching quote ahead. Finally,
+if the character is a letter, it will read the bytes until the next white space.
+First, it will check the keyword map (Go's maps are a key-value store, called
+Hash Maps, Hash Tables, Dictionaries in other languages). If it finds it, it
+will return the token for that keyword; else, it will treat it as an identifier
+(i.e., a variable, function name, etc.). The lexer will stop once it finds an
+EOF. And finally, if it doesn't match the previous rules, it will return an
+illegal token.
 
 ## Parsing
 
@@ -157,6 +189,8 @@ go run cmd/gjsy examples/hello_world.js
 ```
 
 ## Conclusion
+
+TODO
 
 ## Credits
 
