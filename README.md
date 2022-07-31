@@ -203,6 +203,9 @@ JavaScript source code.
 
 ## Working with the Source Code
 
+The source code is available at GitHub:
+[https://github.com/go-js-yourself/gjsy](https://github.com/go-js-yourself/gjsy).
+
 ### Pre-requisites
 
 This project uses Go 1.18, but the `Makefile` commands will run on Docker to
