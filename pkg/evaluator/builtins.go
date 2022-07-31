@@ -11,9 +11,9 @@ import (
 var wg sync.WaitGroup
 
 var builtins = map[string]*object.BuiltinObj{
-	"console": &object.BuiltinObj{
+	"console": {
 		Funcs: map[string]*object.BuiltinFunc{
-			"log": &object.BuiltinFunc{
+			"log": {
 				Func: func(args ...object.Object) object.Object {
 					out := make([]string, len(args))
 					for i, a := range args {
@@ -25,9 +25,9 @@ var builtins = map[string]*object.BuiltinObj{
 			},
 		},
 	},
-	"wg": &object.BuiltinObj{
+	"wg": {
 		Funcs: map[string]*object.BuiltinFunc{
-			"add": &object.BuiltinFunc{
+			"add": {
 				Func: func(args ...object.Object) object.Object {
 					if len(args) != 1 {
 						return newError("wrong number of arguments. got=%d, want=1",
@@ -43,7 +43,7 @@ var builtins = map[string]*object.BuiltinObj{
 					}
 				},
 			},
-			"done": &object.BuiltinFunc{
+			"done": {
 				Func: func(args ...object.Object) object.Object {
 					if len(args) != 0 {
 						return newError("wrong number of arguments. got=%d, want=0",
@@ -53,7 +53,7 @@ var builtins = map[string]*object.BuiltinObj{
 					return &object.Undefined{}
 				},
 			},
-			"wait": &object.BuiltinFunc{
+			"wait": {
 				Func: func(args ...object.Object) object.Object {
 					if len(args) != 0 {
 						return newError("wrong number of arguments. got=%d, want=0",
