@@ -47,8 +47,9 @@ time constrain. We have support for the following:
     * Even though we have support for the dot expression, we have a minimal
       object system, which is used just for built-in exposed functions, namely
       `console.log`, and a minimal barrier for the threads by using Go's
-      `sync.WaitGroup`, exposing a single instance of a wait group and providing
-      support for `wg.add(<integer>)`, `wg.done()` and `wg.wait()`
+      [`sync.WaitGroup`](https://pkg.go.dev/sync#WaitGroup), exposing a single
+      instance of a wait group and providing support for `wg.add(<integer>)`,
+      `wg.done()` and `wg.wait()`
   * Go function application
     * This will start a new go routine (`go function() {...}()`)
 
@@ -100,7 +101,23 @@ illegal token.
 
 ## Parsing
 
-TODO
+The [parser](./pkg/parser/parser.go) is responsible for reading the passed input
+and using the lexer to build an abstract syntax tree. It keeps track of the
+current token, and the next token used when there are optional tokens right
+after (i.e., both `return 0;` and `return;` are valid expressions in
+JavaScript).
+
+The parsing is split into three main components. First is the parsing of
+statements, which are two; the variable declaration (`var` and `let`) and the
+`return` statement. The next component, parses literals (e.g., integer,
+booleans), prefix expressions (i.e., not [`!`], and minus [`-`]), and expression
+(e.g., `if`, `while`, `function` definition, etc.). Finally, the last component
+parses operation expressions, the comparison and binary operations, the assign
+and dot operation, and the function application.
+
+The parser also has an errors list in case of an error while parsing or lexing
+the input. This list is exposed through a public method, so other components
+that use the parser can display the error to the end user.
 
 ## Environment
 
@@ -164,6 +181,26 @@ can be run by using the following command:
 ```shell
 make run FILE=examples/multi_thread.js
 ```
+
+## Conclusion
+
+We set the initial goal of having a JavaScript interpreter and adding
+multi-threading capabilities to it. As we started implementing this project, we
+realized the plan was ambitious. So we narrowed the support of the instructions
+to what would allow us for a minimal implementation. We decided to leave out
+string concatenation, grouped operations for expressions, the user-defined
+object system, and other number formats (i.e., doubles, floats), and focused on
+adding the multi-thread capabilities. Initially, we had neither thread barriers
+nor a way to print out to the standard output. So, we decided to introduce the
+minimal internal object system to expose `console.log`, and a singleton of Go's
+`WaitGroup`.
+
+We are satisfied with the project results, considering the given limitations due
+to the time constraints. We want to continue the work on this implementation,
+with the possible future improvements of what we couldn't implement, already
+described before. And possibly even adding a compiler would allow compiling
+JavaScript source code.
+
 ## Working with the Source Code
 
 ### Pre-requisites
@@ -179,7 +216,7 @@ pre-requisites are:
 
 If using the provided `Makefile`, run:
 
-```
+```shell
 make test
 # or with Go
 go test ./...
@@ -190,7 +227,7 @@ go test ./...
 After building, a single binary `gjsy` can be found in the `build/bin`
 directory, if running with go, it is usually installed in `$GOPATH/bin`
 
-```
+```shell
 make build
 # or
 go install ./...
@@ -200,30 +237,36 @@ go install ./...
 
 This project includes a REPL, you can run it with:
 
-```
+```shell
 make repl
 # or
 go run cmd/gjsy repl
 ```
 
-### File interpreter
+### File Interpreter
 
 There are several provided examples in the `examples` directory, to interpret
 a single file, run
 
-```
+```shell
 make run FILE=examples/hello_world.js
 # or
 go run cmd/gjsy examples/hello_world.js
 ```
 
-## Conclusion
+#### Running the Provided Examples
 
-TODO
+It is possible to run all of the provided examples with a single `make` target,
+just run the `examples` target.
+
+```shell
+make examples
+```
 
 ## Credits
 
-Miles Possing, Ivan Valdes Castillo
+* Miles Possing (mpossi2)
+* Ivan Valdes Castillo (iv4)
 
 ## References
 
