@@ -116,7 +116,36 @@ statements, and expressions. In the above file, there is a single switch
 statement which selects on the token type to evaluate. Further evaluation
 is conducted in subordonate files. For example the
 [identifier.go](./pkg/evaluator/identifier.go) file evaluates an identifier
-given the environment.
+given the environment. Ultimately the evaluator recursively calls statements
+and expressions in an abstract syntax tree given a particular environment.
+The result of the evaluation is the return value of the program, and the
+environment is also mutated as a side-effect.
+
+### Program Evaluation
+
+A [program](./pkg/ast/program.go) is simply a list of statements which are
+executed in order. This is considered the top-most node in our AST.
+
+### Statement Evaluation
+
+There are 3 basic statements which are executed by our program,
+
+* [Expression Statements](./pkg/ast/expression_statement.go)
+, allowing expressions to be executed
+* [Let Statements](./pkg/ast/let_statement.go)
+, allowing variables to be defined in the scope of the current environment
+* [Closure Statements](./pkg/ast/closure_statement.go)
+, allowing closures to be defined (`function funcName() {}` syntax in javascript)
+
+### Expression Evaluation
+
+There are many expressions which we can evaluate in `gjsy`. While we don't
+have exact feature parity with javascript, we are quite close to what
+someone might learn in their first month. Certainly close enough to write
+a program to get through most interview questions. Rather than introducing
+every expression here, we encourage the reader to review
+[evaluator.go at line 32](./pkg/evaluator/evaluator.go) for a more complete
+understanding of each expression.
 
 ## Parallelism and Go
 

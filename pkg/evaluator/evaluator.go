@@ -14,10 +14,11 @@ var (
 
 // Recursively evaluate a given program
 func Eval(node ast.Node, env *object.Environment) object.Object {
+	// parses statements and expressions
 	switch node := node.(type) {
-	// statements
 	case *ast.Program:
 		return evalProgram(node, env)
+	// statements
 	case *ast.ExpressionStatement:
 		return Eval(node.Expression, env)
 	case *ast.ClosureStatement:
