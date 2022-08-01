@@ -40,3 +40,6 @@ examples: build/bin/gjsy
 	  ./build/bin/gjsy $$file ; \
 	  echo ; \
 	done
+
+writeup:
+	pandoc README.md -o writeup.pdf
